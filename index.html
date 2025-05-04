@@ -83,6 +83,8 @@
     let resetTimer = null;
     
     function handleKeyPress() {
+      presses++
+      
       if (presses === 1) {
         resetTimer = setTimeout(() => {
           presses = 0
@@ -97,14 +99,19 @@
       }
     }
     
+    let stopTimer = null
     function dialAndChatter() {
-      const dialTone = new Audio()
-      const chatterings = []
-      const chatter = new Audio( `${nn.random(chatterings)}`)
+      const dialTone = new Audio("phonecalling.mp3")
+      dialTone.currentTime = 0.925
       
       dialTone.play()
+      const stopTime = 8.943 * 1000
+      if (stopTimer) clearTimeout(stopTimer);
+      stopTimer = setTimeout(() => dialTone.pause(), stopTime)
       
-      dialTone.addEventListener("ended", () => {
+      const chatterings = []
+      const chatter = new Audio( `${nn.random(chatterings)}`)
+       dialTone.addEventListener("ended", () => {
         chatter.play()
       })
     }
