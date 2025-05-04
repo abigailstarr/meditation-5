@@ -63,59 +63,61 @@
   <script>
     /* global nn */
     let audioCtx = new window.AudioContext()
-    
+
     function randomBeep() {
-        if (!audioCtx) {
-          audioCtx = new window.AudioContext()
-        }
-        const pitch = audioCtx.createOscillator()
-        pitch.type = "triangle"
-        pitch.frequency.value = nn.random(440, 880)
-        
-        pitch.connect(audioCtx.destination)
-        
-         const now = audioCtx.currentTime
-          pitch.start(now)
-          pitch.stop(now + 0.2)
+      if (!audioCtx) {
+        audioCtx = new window.AudioContext()
       }
-    
+      const pitch = audioCtx.createOscillator()
+      pitch.type = "triangle"
+      pitch.frequency.value = nn.random(440, 880)
+
+      pitch.connect(audioCtx.destination)
+
+      const now = audioCtx.currentTime
+      pitch.start(now)
+      pitch.stop(now + 0.2)
+    }
+
     let presses = 0;
     let resetTimer = null;
-    
+
     function handleKeyPress() {
       presses++
-      
+
       if (presses === 1) {
         resetTimer = setTimeout(() => {
           presses = 0
           console.log("Timer reset!!")
         }, 60000)
       }
-      
+
       if (presses >= 10) {
         clearTimeout(resetTimer)
         presses = 0
         dialAndChatter()
       }
     }
-    
+
     let stopTimer = null
     function dialAndChatter() {
       const dialTone = new Audio("phonecalling.mp3")
       dialTone.currentTime = 0.925
-      
+
       dialTone.play()
+      
+      const chatterings = ["catchatter.mp3", "peanuts.mp3", "morseCode.mp3", "aliens.mp3"]
+      const chatter = new Audio(nn.random(chatterings))
+      
       const stopTime = 8.943 * 1000
       if (stopTimer) clearTimeout(stopTimer);
-      stopTimer = setTimeout(() => dialTone.pause(), stopTime)
-      
-      const chatterings = ["catchatter.mp3", "peanuts.mp3","morseCode.mp3", "aliens.mp3"]
-      const chatter = new Audio( nn.random(chatterings))
-       dialTone.addEventListener("ended", () => {
+      stopTimer = setTimeout(async () => {
+        dialTone.pause()
+        await nn.sleep(500)
         chatter.play()
-      })
+      }, stopTime)
     }
-    
+
     function setup() {
       const keys = nn.getAll(".key")
       for (let key of keys) {
@@ -125,7 +127,7 @@
         })
       }
     }
-    
-  nn.on("load", setup)
+
+    nn.on("load", setup)
   </script>
 </body>
