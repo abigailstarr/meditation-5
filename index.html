@@ -41,36 +41,34 @@
       box-shadow: inset 0px -5px gray;
     }
 
-    .nine {
+    .zero {
       grid-column: 2;
     }
   </style>
 </head>
 
 <body>
+  <div class="keypad">
+    <div class="key">1</div>
+    <div class="key">2</div>
+    <div class="key">3</div>
+    <div class="key">4</div>
+    <div class="key">5</div>
+    <div class="key">6</div>
+    <div class="key">7</div>
+    <div class="key">8</div>
+    <div class="key">9</div>
+    <div class="key zero">0</div>
+  </div>
   <script>
     /* global nn */
-    const audioCtx = new window.AudioContext()
+    let audioCtx = new window.AudioContext()
     
-    function setup() {
-      const phonePad = nn.create("div").addTo("body").addClassList("keypad")
-
-      for (let i = 0; i < 10; i++) {
-        if (i === 9) {
-          nn.create("div")
-            .addTo("phonePad")
-            .addClassList("key nine")
-            .on("click", randomBeep)
-        } else {
-          nn.create("div")
-            .addTo("phonePad")
-            .addClassList("key")
-            .on("click", randomBeep)
+    function randomBeep() {
+        if (!audioCtx) {
+          audioCtx = new window.AudioContext()
         }
-      }
-    }
-      function randomBeep() {
-        const pitch = audioCtx.createOscilator()
+        const pitch = audioCtx.createOscillator()
         pitch.type = "triangle"
         pitch.frequency.value = nn.random(440, 880)
         
@@ -78,8 +76,15 @@
         
          const now = audioCtx.currentTime
           pitch.start(now)
-          pitch.stop(now + 0.5)
+          pitch.stop(now + 0.2)
       }
+    
+    function setup() {
+      const keys = nn.getAll(".key")
+      for (let key of keys) {
+        key.on("click", randomBeep)
+      }
+    }
     
   nn.on("load", setup)
   </script>
