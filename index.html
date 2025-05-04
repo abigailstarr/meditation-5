@@ -109,8 +109,8 @@
       if (stopTimer) clearTimeout(stopTimer);
       stopTimer = setTimeout(() => dialTone.pause(), stopTime)
       
-      const chatterings = []
-      const chatter = new Audio( `${nn.random(chatterings)}`)
+      const chatterings = ["catchatter.mp3", "peanuts.mp3","morseCode.mp3", "aliens.mp3"]
+      const chatter = new Audio( nn.random(chatterings))
        dialTone.addEventListener("ended", () => {
         chatter.play()
       })
