@@ -79,10 +79,43 @@
           pitch.stop(now + 0.2)
       }
     
+    let presses = 0;
+    let resetTimer = null;
+    
+    function handleKeyPress() {
+      if (presses === 1) {
+        resetTimer = setTimeout(() => {
+          presses = 0
+          console.log("Timer reset!!")
+        }, 60000)
+      }
+      
+      if (presses >= 10) {
+        clearTimeout(resetTimer)
+        presses = 0
+        dialAndChatter()
+      }
+    }
+    
+    function dialAndChatter() {
+      const dialTone = new Audio()
+      const chatterings = []
+      const chatter = new Audio( `${nn.random(chatterings)}`)
+      
+      dialTone.play()
+      
+      dialTone.addEventListener("ended", () => {
+        chatter.play()
+      })
+    }
+    
     function setup() {
       const keys = nn.getAll(".key")
       for (let key of keys) {
-        key.on("click", randomBeep)
+        key.on("click", () => {
+          randomBeep()
+          handleKeyPress()
+        })
       }
     }
     
