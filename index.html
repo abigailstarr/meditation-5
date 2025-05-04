@@ -1,68 +1,86 @@
-
 <head>
-<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
-  
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: lemonchiffon;
-  }
-  
-  .keypad {
-    max-width: 80%;
-    position: absolute;
-    padding: 20px;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background-color: lightgray;
-    border-radius: 10px;
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(4, 100px);
-    grid-gap: 20px;
-    box-shadow: 2px 3px gray;
-  }
-  
-  .key {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: inset 0 -8px gray;
-    text-align: center;
-    font-size: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 0.2s;
-    text-shadow: 0px 1.5px gray;
-  }
-  
-  .key:hover {
-    box-shadow: inset 0px -5px gray;
-  }
-  
-  .nine {
-    grid-column: 2;
-  }
-  
-</style>
+  <script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: lemonchiffon;
+    }
+
+    .keypad {
+      max-width: 80%;
+      position: absolute;
+      padding: 20px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: lightgray;
+      border-radius: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(4, 100px);
+      grid-gap: 20px;
+      box-shadow: inset 0 -11px gray;
+    }
+
+    .key {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: inset 0 -11px gray;
+      text-align: center;
+      font-size: 300%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.2s;
+    }
+
+    .key:hover {
+      box-shadow: inset 0px -5px gray;
+    }
+
+    .nine {
+      grid-column: 2;
+    }
+  </style>
 </head>
 
 <body>
-  <div class="keypad">
-    <div class="key">0</div>
-    <div class="key">1</div>
-    <div class="key">2</div>
-    <div class="key">3</div>
-    <div class="key">4</div>
-    <div class="key">5</div>
-    <div class="key">6</div>
-    <div class="key">7</div>
-    <div class="key">8</div>
-    <div class="key nine">9</div>
-  </div>
-<script>
-</script>
+  <script>
+    /* global nn */
+    const audioCtx = new window.AudioContext()
+    
+    function setup() {
+      const phonePad = nn.create("div").addTo("body").addClassList("keypad")
+
+      for (let i = 0; i < 10; i++) {
+        if (i === 9) {
+          nn.create("div")
+            .addTo("phonePad")
+            .addClassList("key nine")
+            .on("click", randomBeep)
+        } else {
+          nn.create("div")
+            .addTo("phonePad")
+            .addClassList("key")
+            .on("click", randomBeep)
+        }
+      }
+    }
+      function randomBeep() {
+        const pitch = audioCtx.createOscilator()
+        pitch.type = "triangle"
+        pitch.frequency.value = nn.random(440, 880)
+        
+        pitch.connect(audioCtx.destination)
+        
+         const now = audioCtx.currentTime
+          pitch.start(now)
+          pitch.stop(now + 0.5)
+      }
+    
+  nn.on("load", setup)
+  </script>
 </body>
