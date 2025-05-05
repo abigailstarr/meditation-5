@@ -46,7 +46,7 @@
     .zero {
       grid-column: 2;
     }
-    
+
     #numbers {
       text-align: center;
       font-size: 3em;
@@ -130,13 +130,8 @@
         await nn.sleep(500)
 
         if (numDialed === 6464208788) {
-          const samSound = new Audio()
+          const samSound = new Audio("carhorn.mp3")
           samSound.play()
-
-          setTimeout(() => {
-            samSound.pause()
-            samSound.currentTime = 0
-          }, 9500)
         } else {
           chatter.play()
         }
