@@ -46,10 +46,19 @@
     .zero {
       grid-column: 2;
     }
+    
+    #numbers {
+      text-align: center;
+      font-size: 3em;
+      font-weight: bold;
+      color: white;
+      margin: 20px;
+    }
   </style>
 </head>
 
 <body>
+  <div id="numbers"></div>
   <div class="keypad">
     <div class="key">1</div>
     <div class="key">2</div>
@@ -102,28 +111,53 @@
     }
 
     let stopTimer = null
+
     function dialAndChatter() {
+      const numDialed = pressed.join("")
+
       const dialTone = new Audio("phonecalling.mp3")
       dialTone.currentTime = 0.925
 
       dialTone.play()
-      
-      const chatterings = ["catchatter.mp3", "peanuts.mp3", "morseCode.mp3", "aliens.mp3"]
+
+      const chatterings = ["catchatter.mp3", "peanuts.mp3", "aliens.mp3"]
       const chatter = new Audio(nn.random(chatterings))
-      
+
       const stopTime = 8.943 * 1000
       if (stopTimer) clearTimeout(stopTimer);
       stopTimer = setTimeout(async () => {
         dialTone.pause()
         await nn.sleep(500)
-        chatter.play()
+
+        if (numDialed === 6464208788) {
+          const samSound = new Audio()
+          samSound.play()
+
+          setTimeout(() => {
+            samSound.pause()
+            samSound.currentTime = 0
+          }, 9500)
+        } else {
+          chatter.play()
+        }
       }, stopTime)
+      pressed = []
+      nn.get("#numbers").textContent = ""
     }
+
+    let pressed = []
 
     function setup() {
       const keys = nn.getAll(".key")
+      const numbers = nn.get("#numbers")
+
       for (let key of keys) {
         key.on("click", () => {
+          const number = key.textContent
+          pressed.push(number)
+
+          numbers.textContent = pressed.join('')
+
           randomBeep()
           handleKeyPress()
         })
